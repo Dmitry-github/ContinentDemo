@@ -1,0 +1,34 @@
+{
+  "iata1": "PKV",
+  "iata2": "VKO"
+}
+
+{
+  "iata1": "VKO",
+  "iata2": "PKV"
+}
+
+{
+  "iata1": "PKV",
+  "iata2": "DME"
+}
+
+{
+  "iata1": "PKV",
+  "iata2": "MMK"
+}
+
+{
+  "iata1": "NYM",
+  "iata2": "MMK"
+}
+
+{
+  "iata1": "GOI",
+  "iata2": "GOJ"
+}
+
+{
+  "iata1": "GOJ",
+  "iata2": "GOI"
+}

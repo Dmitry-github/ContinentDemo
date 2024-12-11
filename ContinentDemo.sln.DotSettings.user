@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=de2b5704_002D0367_002D4c16_002Da31f_002D5c7ac03b52e5/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="TestDistance" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::81FA3001-E756-4D8C-ACCF-9AB2712D7913::net6.0::ContinentDemo.Tests.DistanceUnitTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:Boolean x:Key="/Default/IdeIntegrationViewOptions/FilterSnapshotsBySolution/@EntryValue">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Active/@EntryValue">C8EF901F3D19E24EA45AEBD0687B1BBA</s:String>
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=C8EF901F3D19E24EA45AEBD0687B1BBA/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=C8EF901F3D19E24EA45AEBD0687B1BBA/Name/@EntryValue">continent_webAPI</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=C8EF901F3D19E24EA45AEBD0687B1BBA/ProjectGuid/@EntryValue">33633A022188964B97733127D469ADC8</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=C8EF901F3D19E24EA45AEBD0687B1BBA/Type/@EntryValue">project</s:String></wpf:ResourceDictionary>
