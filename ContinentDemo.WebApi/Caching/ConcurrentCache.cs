@@ -43,7 +43,7 @@
 
             var added = _cache.TryAdd(key, new CacheItem<TValue?>(value, expiresAfter));
 
-            _logger.Log(LogLevel.Information, $"{(added ? "Added to cache" : "Cannot Add")} : {key} - {value} ...");
+            _logger.Log(LogLevel.Information, $"{(added ? "Added to cache" : "Cannot Add")} : {key} - {value?.ToString()} ...");
 
             return added;
         }

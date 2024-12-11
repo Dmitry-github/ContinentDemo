@@ -26,34 +26,46 @@
 
         private async Task<double> GetDistanceFromIatasAsync(string iata1, string iata2)
         {
+            //---------------------------------------------
+            //var stopwatch = new Stopwatch(); stopwatch.Start();
+            //var cachedDistance = await _locationLogic.GetDistanceFromCacheAsync(iata1, iata2);
+
+            //if (cachedDistance.HasValue)
+            //{
+            //    stopwatch.Stop(); _logger.Log(LogLevel.Information, $"Time for query - {stopwatch.ElapsedMilliseconds} ms");
+
+            //    return (double)cachedDistance;
+            //}
+
+            //var locationTask1 = _locationLogic.GetLocationFromRequestAsync(iata1);
+            //var locationTask2 = _locationLogic.GetLocationFromRequestAsync(iata2);
+
+            //await Task.WhenAll(locationTask1, locationTask2);
+
+            //var distance = locationTask1.Result!.HasValue && locationTask2.Result!.HasValue
+            //    ? Distance.GetDistanceInMiles(locationTask1.Result!.Value, locationTask2.Result!.Value)
+            //    : -1;
+
+            //if (distance > 0)
+            //    await _locationLogic.StoreDistanceToCacheAsync(iata1, iata2, distance);
+            //else 
+            //    _logger.Log(LogLevel.Warning, $"Distance result for {iata1}-{iata2} is {distance}");
+
+            //stopwatch.Stop(); _logger.Log(LogLevel.Information,$"Time for query - {stopwatch.ElapsedMilliseconds} ms");
+
+            //return distance;
+            //---------------------------------------------
+
             var stopwatch = new Stopwatch(); stopwatch.Start();
 
-            var cachedDistance = await _locationLogic.GetDistanceFromCacheAsync(iata1, iata2);
-            
-            if (cachedDistance.HasValue)
-            {
-                stopwatch.Stop(); _logger.Log(LogLevel.Information, $"Time for query - {stopwatch.ElapsedMilliseconds} ms");
-                
-                return (double)cachedDistance;
-            }
-            
-            var locationTask1 = _locationLogic.GetLocationFromRequestAsync(iata1);
-            var locationTask2 = _locationLogic.GetLocationFromRequestAsync(iata2);
+            var distance = await _locationLogic.GetDistanceAsync(iata1, iata2);
 
-            await Task.WhenAll(locationTask1, locationTask2);
-
-            var distance = locationTask1.Result!.HasValue && locationTask2.Result!.HasValue
-                ? Distance.GetDistanceInMiles(locationTask1.Result!.Value, locationTask2.Result!.Value)
-                : -1;
-
-            if (distance > 0)
-                await _locationLogic.StoreDistanceToCacheAsync(iata1, iata2, distance);
-            else 
+            if (distance == null)
                 _logger.Log(LogLevel.Warning, $"Distance result for {iata1}-{iata2} is {distance}");
 
-            stopwatch.Stop(); _logger.Log(LogLevel.Information,$"Time for query - {stopwatch.ElapsedMilliseconds} ms");
+            stopwatch.Stop(); _logger.Log(LogLevel.Information, $"Time for query - {stopwatch.ElapsedMilliseconds} ms");
 
-            return distance;
+            return distance ?? -1;
 
             //---------------------------------------------
             //var locationTask3 = _locationLogic.GetLocationFromRequestAsync(iata1);
