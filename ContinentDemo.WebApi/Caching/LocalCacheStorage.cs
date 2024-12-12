@@ -6,12 +6,14 @@
     public class LocalCacheStorage: ICacheStorage
     {
         //private static ConcurrentCache<string, double?> _cache = null!; 
-        private static ConcurrentCache<string, Location?> _cache = null!;
+        private static IConcurrentCache<string, Location?> _cache = null!;
+        private readonly int _localCacheExpiresAfterHours;
 
         public LocalCacheStorage()
         {
             //_cache = new ConcurrentCache<string, double?>();
             _cache = new ConcurrentCache<string, Location?>();
+            _localCacheExpiresAfterHours = ConfigAppSettings.LocalCacheExpiresAfterHours;
         }
 
         /*
@@ -36,7 +38,7 @@
 
         public async Task StoreLocationToCacheAsync(string key, Location value)
         {
-            await Task.Run(() => _cache.Store(key, value, TimeSpan.FromHours(ConfigAppSettings.LocalCacheExpiresAfterHours)));
+            await Task.Run(() => _cache.Store(key, value, TimeSpan.FromHours(_localCacheExpiresAfterHours)));
         }
     }
 }

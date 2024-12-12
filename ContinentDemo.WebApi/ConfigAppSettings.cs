@@ -39,5 +39,9 @@
         public static int RedisAbsoluteExpirationHours => Convert.ToInt32(Configuration["AppSettings:RedisAbsoluteExpirationHours"]);
 
         public static int RedisSlidingExpirationHours => Convert.ToInt32(Configuration["AppSettings:RedisSlidingExpirationHours"]);
+
+        public static bool ExtendedLogEnabled => Convert.ToBoolean(Configuration["AppSettings:ExtendedLogEnabled"]);
+
+        public static bool UseTimer => Convert.ToBoolean(Configuration["AppSettings:UseTimer"]);
     }
 }

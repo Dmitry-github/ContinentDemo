@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging.Console;
+
 namespace ContinentDemo.WebApi
 {
     using Caching;
@@ -25,7 +27,13 @@ namespace ContinentDemo.WebApi
             //logs
             using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
                 .SetMinimumLevel(LogLevel.Trace)
-                .AddConsole());
+                .AddSimpleConsole(options =>
+                {
+                    options.IncludeScopes = true;
+                    options.SingleLine = true;
+                    options.TimestampFormat = "HH:mm:ss ";
+                })
+            );
 
             ILogger<NetworkRequestHandler> networkHandlerLogger = loggerFactory.CreateLogger<NetworkRequestHandler>();
             ILogger<ProblemDetails> problemDetailsLogger = loggerFactory.CreateLogger<ProblemDetails>();

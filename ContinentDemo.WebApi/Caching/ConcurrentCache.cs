@@ -1,5 +1,6 @@
 ﻿namespace ContinentDemo.WebApi.Caching
 {
+    using Interfaces;
     using System.Collections.Concurrent;
 
     public class CacheItem<T>
@@ -15,15 +16,17 @@
     }
 
 
-    public class ConcurrentCache<TKey, TValue> where TKey : notnull
+    public class ConcurrentCache<TKey, TValue> : IConcurrentCache<TKey, TValue> where TKey : notnull
     {
         private readonly int _initialCapacity = ConfigAppSettings.LocalCacheInitialCapacity;
+
         private readonly int _numProcs = Environment.ProcessorCount;
         //private int concurrencyLevel = _numProcs * 2;
 
         //private readonly ConcurrentDictionary<TKey, CacheItem<TValue?>> _cache = new ConcurrentDictionary<TKey, CacheItem<TValue?>>();
         private readonly ConcurrentDictionary<TKey, CacheItem<TValue?>> _cache;
         private readonly ILogger<ConcurrentCache<TKey, TValue>> _logger;
+        private readonly bool _extendedLog;
 
         public ConcurrentCache()
         {
@@ -35,6 +38,7 @@
 
             _logger = LoggerFactory.Create(loggingBuilder => loggingBuilder
                 .SetMinimumLevel(LogLevel.Trace).AddConsole()).CreateLogger<ConcurrentCache<TKey, TValue>>();
+            _extendedLog = ConfigAppSettings.ExtendedLogEnabled;
         }
 
         public bool Store(TKey key, TValue value, TimeSpan expiresAfter)
@@ -43,7 +47,8 @@
 
             var added = _cache.TryAdd(key, new CacheItem<TValue?>(value, expiresAfter));
 
-            _logger.Log(LogLevel.Information, $"{(added ? "Added to cache" : "Cannot Add")} : {key} - {value?.ToString()} ...");
+            if (_extendedLog)
+                _logger.Log(LogLevel.Information, $"{(added ? "Added to cache" : "Cannot Add")} : {key} - {value?.ToString()}");
 
             return added;
         }
@@ -52,14 +57,20 @@
         {
             if (!_cache.ContainsKey(key)) return default(TValue);
             var cached = _cache[key];
+            
+            if (_extendedLog)
+                _logger.Log(LogLevel.Information, $"Get from cache: {key} - {cached.ToString()}");
 
             if (DateTimeOffset.Now - cached.Created >= cached.ExpiresAfter)
             {
-                if (!_cache.TryRemove(key, out var notRemoved))
-                    _logger.Log(LogLevel.Warning, $"Cannot remove expired: {key} - {notRemoved} ...");
+                var removed = _cache.TryRemove(key, out var notRemoved);
 
-                return default(TValue);
+                if (_extendedLog)
+                    _logger.Log(LogLevel.Warning, $"{(removed ? "Removed" : "Cannot remove")} expired: {key} - {notRemoved?.ToString()}");
+
+                //return default(TValue);
             }
+
             return cached.Value;
         }
     }

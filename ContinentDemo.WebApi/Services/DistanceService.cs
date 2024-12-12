@@ -9,11 +9,13 @@
         private readonly ILocationLogic _locationLogic;
         //private readonly ILogger _logger;
         private readonly ILogger<DistanceService> _logger;
+        private readonly bool _useTimer;
 
         public DistanceService(ILocationLogic locationLogic, ILogger<DistanceService> logger)
         {
             _locationLogic = locationLogic;
             _logger = logger;
+            _useTimer = ConfigAppSettings.UseTimer;
         }
 
         public async Task<double> GetDistanceBetweenIataAsync(string iata1, string iata2)
@@ -56,14 +58,18 @@
             //return distance;
             //---------------------------------------------
 
-            var stopwatch = new Stopwatch(); stopwatch.Start();
+            var stopwatch = new Stopwatch();
+            if(_useTimer) stopwatch.Start();
 
             var distance = await _locationLogic.GetDistanceAsync(iata1, iata2);
 
-            if (distance == null)
+            if (distance == null | distance!.Value <= 0)
                 _logger.Log(LogLevel.Warning, $"Distance result for {iata1}-{iata2} is {distance}");
 
-            stopwatch.Stop(); _logger.Log(LogLevel.Information, $"Time for query - {stopwatch.ElapsedMilliseconds} ms");
+            if (_useTimer)
+            {
+                stopwatch.Stop(); _logger.Log(LogLevel.Information, $"Time spent - {stopwatch.ElapsedMilliseconds} ms");
+            }
 
             return distance ?? -1;
 

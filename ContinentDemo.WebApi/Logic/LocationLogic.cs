@@ -12,6 +12,7 @@
         private readonly ICacheStorage _cacheStorage;
         private readonly ILogger<LocationLogic> _logger;
         private readonly int _cachingOperationTimeOut;
+        private readonly bool _extendedLog;
 
         public LocationLogic(INetworkRequestHandler? handler, ICacheStorage cacheStorage, ILogger<LocationLogic> logger)
         {
@@ -19,6 +20,7 @@
             _cacheStorage = cacheStorage;
             _logger = logger;
             _cachingOperationTimeOut = ConfigAppSettings.CachingOperationTimeOut;
+            _extendedLog = ConfigAppSettings.ExtendedLogEnabled;
         }
 
         public async Task<Location?> GetLocationFromRequestAsync(string iata)
@@ -120,7 +122,12 @@
 
             if (await Task.WhenAny(locationTask, timeOutTask) != timeOutTask)
             {
-                return await locationTask;
+                var location = await locationTask;
+                
+                if (_extendedLog)
+                    _logger.Log(LogLevel.Information, $"Get from cache location: {iata} - {location.ToString()}");
+
+                return location;
             }
             else
             {
@@ -137,6 +144,9 @@
             if (await Task.WhenAny(locationTask, timeOutTask) != timeOutTask)
             {
                 await locationTask;
+                
+                if (_extendedLog)
+                    _logger.Log(LogLevel.Information, $"Store to cache location: {iata} - {location.ToString()}");
             }
             else
             {
@@ -155,11 +165,13 @@
             return locationFromCache ?? (locationFromRequest ?? null);
         }
 
+        /*
         private string[] SortIataPair(string iata1, string iata2)
         {
             var pairArray = new[] { iata1, iata2 };
             Array.Sort(pairArray);
             return pairArray;
         }
+        */
     }
 }
