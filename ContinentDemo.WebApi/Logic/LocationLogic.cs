@@ -47,8 +47,9 @@
             return location;
         }
 
-        public async Task<double?> GetDistanceAsync(string iata1, string iata2)
+        public async Task<(double?, string)> GetDistanceAsync(string iata1, string iata2)
         {
+            var text = string.Empty;
             var locationTask1 = GetLocationAsync(iata1);
             var locationTask2 = GetLocationAsync(iata2);
             
@@ -58,7 +59,14 @@
                 ? Distance.GetDistanceInMiles(locationTask1.Result.Value, locationTask2.Result!.Value)
                 : (double?)null;
 
-            return distance;
+            if (!locationTask1.Result.HasValue | !locationTask2.Result.HasValue)
+            {
+                text = $"No Location found for: {(!locationTask1.Result.HasValue ? iata1 : string.Empty)} " +
+                       $"{(!locationTask2.Result.HasValue ? iata2 : string.Empty)}";
+                _logger.Log(LogLevel.Warning, text);
+            }
+
+            return (distance, text);
         }
 
         public async Task<Location?> GetLocationFromCacheAsync(string iata)

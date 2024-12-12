@@ -32,3 +32,8 @@
   "iata1": "GOJ",
   "iata2": "GOI"
 }
+
+{
+  "iata1": "ABC",
+  "iata2": "DEF"
+}

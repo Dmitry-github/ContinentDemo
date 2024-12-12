@@ -28,12 +28,12 @@ namespace ContinentDemo.WebApi.Controllers
             if (requestValidationResult != null)
                 return requestValidationResult;
 
-            var distance = await _distanceService.GetDistanceBetweenIataAsync(request.Iata1, request.Iata2);
+            var (distance, problemText) = await _distanceService.GetDistanceBetweenIataAsync(request.Iata1, request.Iata2);
 
             if (distance > 0)
                 return Ok(new DistanceResponse { Iata1 = request.Iata1, Iata2 = request.Iata2, Distance = distance });
 
-            return BadRequest(CreateProblemDetails("Logic error", $"Invalid calculation result: {distance}"));
+            return BadRequest(CreateProblemDetails("Logic error", $"Invalid result: {distance} - {problemText}"));
         }
 
         private async Task<IActionResult?> RequestValidationAsync(DistanceQuery request, IValidator<DistanceQuery> validator)
