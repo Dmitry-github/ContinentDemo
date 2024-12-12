@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging.Console;
-
 namespace ContinentDemo.WebApi
 {
     using Caching;
@@ -11,7 +9,6 @@ namespace ContinentDemo.WebApi
     using Queries;
     using Microsoft.OpenApi.Models;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Extensions.Caching.Distributed;
 
     public class Program
     {
@@ -37,7 +34,6 @@ namespace ContinentDemo.WebApi
 
             ILogger<NetworkRequestHandler> networkHandlerLogger = loggerFactory.CreateLogger<NetworkRequestHandler>();
             ILogger<ProblemDetails> problemDetailsLogger = loggerFactory.CreateLogger<ProblemDetails>();
-            //ILogger<DistanceService> distServiceLogger = loggerFactory.CreateLogger<DistanceService>();
 
             builder.Services.AddTransient<IDistanceService, DistanceService>();
             builder.Services.AddTransient<ILocationLogic, LocationLogic>();
@@ -78,7 +74,6 @@ namespace ContinentDemo.WebApi
             //FluentValidation
             builder.Services.AddScoped<IValidator<DistanceQuery>, TransactionQueryValidator>();
 
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -103,7 +98,6 @@ namespace ContinentDemo.WebApi
             app.UseRouting();
             app.UseAuthorization();
             
-            //app.MapControllers();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

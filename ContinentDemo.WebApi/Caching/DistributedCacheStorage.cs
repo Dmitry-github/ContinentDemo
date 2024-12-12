@@ -20,18 +20,6 @@
             };
         }
 
-        public async Task<double?> GetDistanceFromCacheAsync(string key)
-        {
-            var cashed = await _cache.GetStringAsync(key);
-            
-            return double.TryParse(cashed, out var result) ? result: null;
-        }
-
-        public async Task StoreDistanceToCacheAsync(string key, double value)
-        {
-            await _cache.SetStringAsync(key, value.ToString(CultureInfo.CurrentCulture), _options);
-        }
-
         public async Task<Location?> GetLocationFromCacheAsync(string key)
         {
             var cashedString = await _cache.GetStringAsync(key);

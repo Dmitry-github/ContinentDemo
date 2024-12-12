@@ -24,7 +24,6 @@ namespace ContinentDemo.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> GetDistanceAsync(DistanceQuery request, [FromServices] IValidator<DistanceQuery> validator)
         {
-            //validation
             var requestValidationResult = await RequestValidationAsync(request, validator);
             if (requestValidationResult != null)
                 return requestValidationResult;
@@ -45,7 +44,6 @@ namespace ContinentDemo.WebApi.Controllers
             {
                 var errorMessages = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage).ToArray());
                 return BadRequest(CreateProblemDetails("Validation error(s)", errorMessages));
-                //return BadRequest($"Validation error(s): {errorMessages}"); 
             }
 
             return null;

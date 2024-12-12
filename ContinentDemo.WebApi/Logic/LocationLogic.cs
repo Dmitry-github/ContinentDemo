@@ -7,7 +7,6 @@
 
     public class LocationLogic: ILocationLogic
     {
-        //public static string KeySeparator { get; } = "#";
         private readonly INetworkRequestHandler? _handler;
         private readonly ICacheStorage _cacheStorage;
         private readonly ILogger<LocationLogic> _logger;
@@ -48,35 +47,6 @@
             return location;
         }
 
-        /*
-        public async Task<double?> GetDistanceFromCacheAsync(string iata1, string iata2)
-        {
-            //var distance12 = await _cacheStorage.GetFromCacheAsync($"{iata1}{KeySeparator}{iata2}");
-            //var distance21 = await _cacheStorage.GetFromCacheAsync($"{iata2}{KeySeparator}{iata1}");
-            //return distance12 ?? (distance21 ?? -1);
-
-            var pairArray = SortIataPair(iata1, iata2);
-
-            //var distance = await _cacheStorage.GetFromCacheAsync($"{pairArray[0]}{KeySeparator}{pairArray[1]}");
-            //return distance;
-
-            var getFromCacheTask = _cacheStorage.GetDistanceFromCacheAsync($"{pairArray[0]}{KeySeparator}{pairArray[1]}");
-
-            try
-            {
-                var distance = await getFromCacheTask.WaitAsync(TimeSpan.FromMilliseconds(_cachingOperationTimeOut));
-                return distance;
-            }
-            catch (TimeoutException)
-            {
-                _logger.Log(LogLevel.Error, "Getting from cache Task timeout...");
-                return null;
-            }
-
-        }
-        */
-
-
         public async Task<double?> GetDistanceAsync(string iata1, string iata2)
         {
             var locationTask1 = GetLocationAsync(iata1);
@@ -89,31 +59,7 @@
                 : (double?)null;
 
             return distance;
-            //location1 ??= 
         }
-
-        /*
-        public async Task StoreDistanceToCacheAsync(string iata1, string iata2, double distance)
-        {
-            //await _cacheStorage.StoreToCacheAsync($"{iata1}{KeySeparator}{iata2}", distance);
-
-            var pairArray = SortIataPair(iata1, iata2);
-
-            //await _cacheStorage.StoreToCacheAsync($"{pairArray[0]}{KeySeparator}{pairArray[1]}", distance);
-
-            var storeToCacheTask = _cacheStorage.StoreDistanceToCacheAsync($"{pairArray[0]}{KeySeparator}{pairArray[1]}", distance);
-
-            try
-            {
-                await storeToCacheTask.WaitAsync(TimeSpan.FromMilliseconds(_cachingOperationTimeOut));
-            }
-            catch (TimeoutException)
-            {
-                _logger.Log(LogLevel.Error, "Store to cache Task timeout...");
-            }
-        }
-        */
-
 
         public async Task<Location?> GetLocationFromCacheAsync(string iata)
         {
@@ -164,14 +110,5 @@
            
             return locationFromCache ?? (locationFromRequest ?? null);
         }
-
-        /*
-        private string[] SortIataPair(string iata1, string iata2)
-        {
-            var pairArray = new[] { iata1, iata2 };
-            Array.Sort(pairArray);
-            return pairArray;
-        }
-        */
     }
 }

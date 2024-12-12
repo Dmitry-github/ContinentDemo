@@ -55,21 +55,5 @@
                 return response;
             });
         }
-
-        public async Task<HttpResponseMessage> MakePostRequestAsync(StringContent content)
-        {
-            return await _retryPolicy.ExecuteAsync(async () =>
-            {
-                _logger.Log(LogLevel.Information, $"Making request to {_host}{_requestUri}");
-
-                var response = await _httpClient.PostAsync(_requestUri, content);
-                if (!response.IsSuccessStatusCode)
-                {
-                    _logger.Log(LogLevel.Warning, $"Request failed with status code: {response.StatusCode}");
-                    throw new HttpRequestException($"Request to {_host} failed with status code {response.StatusCode}");
-                }
-                return response;
-            });
-        }
     }
 }
