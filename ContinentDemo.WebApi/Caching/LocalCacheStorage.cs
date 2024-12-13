@@ -14,17 +14,15 @@
             _localCacheExpiresAfterHours = ConfigAppSettings.LocalCacheExpiresAfterHours;
         }
 
-        public async Task<Location?> GetLocationFromCacheAsync(string key)
+        public Task<Location?> GetLocationFromCacheAsync(string key)
         {
-            return await Task.Run(() => _cache.Get(key));
+            return Task.FromResult(_cache.Get(key));
         }
 
-        public async Task<bool> StoreLocationToCacheAsync(string key, Location value)
+        public Task<bool> StoreLocationToCacheAsync(string key, Location value)
         {
-            var added = await Task.Run(() =>
-                _cache.Store(key, value, TimeSpan.FromHours(_localCacheExpiresAfterHours)));
-
-            return added;
+            var added = _cache.Store(key, value, TimeSpan.FromHours(_localCacheExpiresAfterHours));
+            return Task.FromResult(added);
         }
     }
 }
