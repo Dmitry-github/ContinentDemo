@@ -19,9 +19,12 @@
             return await Task.Run(() => _cache.Get(key));
         }
 
-        public async Task StoreLocationToCacheAsync(string key, Location value)
+        public async Task<bool> StoreLocationToCacheAsync(string key, Location value)
         {
-            await Task.Run(() => _cache.Store(key, value, TimeSpan.FromHours(_localCacheExpiresAfterHours)));
+            var added = await Task.Run(() =>
+                _cache.Store(key, value, TimeSpan.FromHours(_localCacheExpiresAfterHours)));
+
+            return added;
         }
     }
 }

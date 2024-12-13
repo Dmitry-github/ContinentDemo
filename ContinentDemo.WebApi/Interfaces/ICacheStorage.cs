@@ -5,6 +5,6 @@
     public interface ICacheStorage
     {
         Task<Location?> GetLocationFromCacheAsync(string key);
-        Task StoreLocationToCacheAsync(string key, Location value);
+        Task<bool> StoreLocationToCacheAsync(string key, Location value);
     }
 }

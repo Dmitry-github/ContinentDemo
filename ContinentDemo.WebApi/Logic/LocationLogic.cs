@@ -77,9 +77,12 @@
             if (await Task.WhenAny(locationTask, timeOutTask) != timeOutTask)
             {
                 var location = await locationTask;
-                
+
                 if (_extendedLog)
-                    _logger.Log(LogLevel.Information, $"Get from cache location: {iata} - {location.ToString()}");
+                {
+                    _logger.Log(LogLevel.Information,
+                        $"{(location == null ?  "Cannot get": "Get")} from cache location: {iata} - {location.ToString()}");
+                }
 
                 return location;
             }
@@ -97,10 +100,13 @@
 
             if (await Task.WhenAny(locationTask, timeOutTask) != timeOutTask)
             {
-                await locationTask;
-                
+                var added = await locationTask;
+
                 if (_extendedLog)
-                    _logger.Log(LogLevel.Information, $"Store to cache location: {iata} - {location.ToString()}");
+                {
+                    _logger.Log((added ? LogLevel.Information: LogLevel.Warning),
+                        $"{(added ? "Added " : "Cannot Add")} to cache : {iata} - {location.ToString()}");
+                }
             }
             else
             {

@@ -27,9 +27,10 @@
             return Location.FromString(cashedString);
         }
 
-        public async Task StoreLocationToCacheAsync(string key, Location value)
+        public async Task<bool> StoreLocationToCacheAsync(string key, Location value)
         {
             await _cache.SetStringAsync(key, value.ToString(), _options);
+            return true;
         }
     }
 }

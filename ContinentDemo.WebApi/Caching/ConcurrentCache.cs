@@ -21,25 +21,16 @@
         private readonly int _initialCapacity = ConfigAppSettings.LocalCacheInitialCapacity;
         private readonly int _numProcs = Environment.ProcessorCount;
         private readonly ConcurrentDictionary<TKey, CacheItem<TValue?>> _cache;
-        private readonly ILogger<ConcurrentCache<TKey, TValue>> _logger;
-        private readonly bool _extendedLog;
 
         public ConcurrentCache()
         {
             int concurrencyLevel = _numProcs * 2;
             _cache = new ConcurrentDictionary<TKey, CacheItem<TValue?>>(concurrencyLevel, _initialCapacity);
-
-            _logger = LoggerFactory.Create(loggingBuilder => loggingBuilder
-                .SetMinimumLevel(LogLevel.Trace).AddConsole()).CreateLogger<ConcurrentCache<TKey, TValue>>();
-            _extendedLog = ConfigAppSettings.ExtendedLogEnabled;
         }
 
         public bool Store(TKey key, TValue value, TimeSpan expiresAfter)
         {
             var added = _cache.TryAdd(key, new CacheItem<TValue?>(value, expiresAfter));
-
-            if (_extendedLog)
-                _logger.Log(LogLevel.Information, $"{(added ? "Added to cache" : "Cannot Add")} : {key} - {value?.ToString()}");
 
             return added;
         }
@@ -48,17 +39,10 @@
         {
             if (!_cache.ContainsKey(key)) return default(TValue);
             var cached = _cache[key];
-            
-            if (_extendedLog)
-                _logger.Log(LogLevel.Information, $"Get from cache: {key} - {cached.ToString()}");
 
             if (DateTimeOffset.Now - cached.Created >= cached.ExpiresAfter)
             {
-                var removed = _cache.TryRemove(key, out var notRemoved);
-
-                if (_extendedLog)
-                    _logger.Log(LogLevel.Warning, $"{(removed ? "Removed" : "Cannot remove")} expired: {key} - {notRemoved?.ToString()}");
-
+                _cache.TryRemove(key, out var notRemoved);
             }
 
             return cached.Value;
